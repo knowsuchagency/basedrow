@@ -40,13 +40,13 @@ class Client:
         table_id,
         page=1,
         size=100,
-        search: str = None,  # type: ignore
-        order_by: str = None,  # type: ignore
-        filters: str = None,  # type: ignore
-        filter_type: str = None,  # type: ignore
-        include: str = None,  # type: ignore
-        exclude: str = None,  # type: ignore
-        view_id: int = None,  # type: ignore
+        search: str = None,
+        order_by: str = None,
+        filters: str = None,
+        filter_type: str = None,
+        include: str = None,
+        exclude: str = None,
+        view_id: int = None,
         **kwargs,
     ):
         filter_args = {}
@@ -73,13 +73,13 @@ class Client:
     def get_row(self, table_id, row_id):
         return self.get(f"/database/rows/table/{table_id}/{row_id}/")
 
-    def create_rows(self, table_id, rows: list[dict], before: int = None):  # type: ignore
+    def create_rows(self, table_id, rows: list[dict], before: int = None):
         endpoint = f"/database/rows/table/{table_id}/batch/"
         params = {"before": before}
         body = {"items": rows}
         return self.post(endpoint, params=params, json=body)
 
-    def create_row(self, table_id, row: dict, before: int = None):  # type: ignore
+    def create_row(self, table_id, row: dict, before: int = None):
         return self.post(
             f"/database/rows/table/{table_id}/",
             params={"before": before},
@@ -95,8 +95,8 @@ class WindmillClient(Client):
     def __init__(self, resource):
         from wmill import get_resource
 
-        r = get_resource(resource)
-        url, token = r["url"], r["token"]  # type: ignore
+        r: dict = get_resource(resource) # noqa
+        url, token = r["url"], r["token"]
         super().__init__(url, token)
 
 
@@ -109,13 +109,13 @@ class Table:
         self,
         page=1,
         size=100,
-        search: str = None,  # type: ignore
-        order_by: str = None,  # type: ignore
-        filters: str = None,  # type: ignore
-        filter_type: str = None,  # type: ignore
-        include: str = None,  # type: ignore
-        exclude: str = None,  # type: ignore
-        view_id: int = None,  # type: ignore
+        search: str = None,
+        order_by: str = None,
+        filters: str = None,
+        filter_type: str = None,
+        include: str = None,
+        exclude: str = None,
+        view_id: int = None,
         **kwargs,
     ):
         return self.client.list_rows(
@@ -135,10 +135,10 @@ class Table:
     def get_row(self, row_id):
         return self.client.get_row(self.table_id, row_id)
 
-    def create_rows(self, rows: list[dict], before: int = None):  # type: ignore
+    def create_rows(self, rows: list[dict], before: int = None):
         return self.client.create_rows(self.table_id, rows, before=before)
 
-    def create_row(self, row: dict, before: int = None):  # type: ignore
+    def create_row(self, row: dict, before: int = None):
         return self.client.create_row(self.table_id, row, before=before)
 
     def update_rows(self, rows: list[dict]):

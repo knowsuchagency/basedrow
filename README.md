@@ -20,23 +20,25 @@ pip install basedrow
 
 ## Usage
 
-### Setting Up the Client
-
-```python
-from basedrow import Client
-
-# Initialize the client
-client = Client(url='YOUR_BASEROW_URL', token='YOUR_API_TOKEN')
-```
-
 ### Working with Tables
 
 ```python
+from basedrow import Client, Table
+
+client = Client(url='YOUR_BASEROW_URL', token='YOUR_API_TOKEN')
+
 # Initialize a table
 table = Table(table_id='YOUR_TABLE_ID', client=client)
 
 # List rows in the table
 rows = table.list_rows()
+
+# Filter rows
+filtered_rows = table.list_rows(
+    # fields starting with `filter__{col}__{op}` will be converted to filters
+    # see Baserow the API documentation for your table for details
+    filter__name__contains='sam',
+)
 
 # Get a specific row
 row = table.get_row(row_id='ROW_ID')
@@ -46,6 +48,10 @@ new_row = table.create_row(row={'column_name': 'value'})
 
 # Update existing rows
 updated_rows = table.update_rows(rows=[{'id': 'ROW_ID', 'column_name': 'new_value'}])
+
+# Windmill
+from basedrow import WindmillClient
+client = WindmillClient(resource="f/your/baserowresource")
 ```
 
 ## Contributing
