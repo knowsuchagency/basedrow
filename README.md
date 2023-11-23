@@ -1,6 +1,6 @@
 # basedrow
 
-![logo.png](logo.png)
+<img src="https://github.com/knowsuchagency/basedrow/blob/main/logo.png?raw=true" alt="logo.png" width="400"/>
 
 `basedrow` is a Python wrapper around the Baserow API. It provides a simple and intuitive way to interact with Baserow databases, allowing users to perform various operations like listing rows, creating new rows, updating existing ones, and more.
 
