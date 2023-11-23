@@ -48,8 +48,11 @@ new_row = table.create_row(row={'column_name': 'value'})
 
 # Update existing rows
 updated_rows = table.update_rows(rows=[{'id': 'ROW_ID', 'column_name': 'new_value'}])
+```
 
-# Windmill
+### Windmill Integration
+
+```python
 from basedrow import WindmillClient
 client = WindmillClient(resource="f/your/baserowresource")
 ```
