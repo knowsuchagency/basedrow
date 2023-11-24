@@ -3,6 +3,9 @@ import httpx
 
 class Client:
     def __init__(self, url, token):
+        url = url.rstrip("/")
+        if not url.endswith("/api"):
+            url = f"{url}/api"
         self.url = url
         self.token = token
         self.headers = {"Authorization": f"Token {self.token}"}
