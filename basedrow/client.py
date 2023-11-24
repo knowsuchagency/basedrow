@@ -1,7 +1,17 @@
+import json
+
 import httpx
 
 
 class Client:
+    @staticmethod
+    def _doctor_row(row: dict):
+        """Converts non-JSON serializable values to JSON serializable values."""
+        for k, v in row.items():
+            if not isinstance(v, (str, int, float, bool, type(None))):
+                row[k] = json.dumps(v)
+        return row
+
     def __init__(self, url, token):
         url = url.rstrip("/")
         if not url.endswith("/api"):
@@ -78,19 +88,21 @@ class Client:
 
     def create_rows(self, table_id, rows: list[dict], before: int = None):
         endpoint = f"/database/rows/table/{table_id}/batch/"
-        params = {"before": before}
-        body = {"items": rows}
+        params = {"before": before} if before is not None else {}
+        body = {"items": [self._doctor_row(row) for row in rows]}
         return self.post(endpoint, params=params, json=body)
 
     def create_row(self, table_id, row: dict, before: int = None):
+        params = {"before": before} if before is not None else {}
         return self.post(
             f"/database/rows/table/{table_id}/",
-            params={"before": before},
-            json=row,
+            params=params,
+            json=self._doctor_row(row),
         )
 
     def update_rows(self, table_id, rows: list[dict]):
         endpoint = f"/database/rows/table/{table_id}/batch/"
+        rows = [self._doctor_row(row) for row in rows]
         return self.patch(endpoint, json={"items": rows})
 
 
@@ -98,7 +110,7 @@ class WindmillClient(Client):
     def __init__(self, resource):
         from wmill import get_resource
 
-        r: dict = get_resource(resource) # noqa
+        r: dict = get_resource(resource)  # noqa
         url, token = r["url"], r["token"]
         super().__init__(url, token)
 
